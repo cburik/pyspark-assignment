@@ -4,6 +4,4 @@ channels:
   - conda-forge
 dependencies:
   - python=3.7
-  - pyspark
-  - pandas
-  - numpy
+  - pyspark=3.2.1
