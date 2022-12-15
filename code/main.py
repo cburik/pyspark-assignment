@@ -24,34 +24,46 @@ def read_data(spark: SparkSession,
 
 def process_data(clientDF: DataFrame,
                  financialDF: DataFrame,
-                 countries: list) -> DataFrame:
+                 countries: list,
+                 rename: dict) -> DataFrame:
     """
-    Processes DataFrames, including filtering and merging
+    Processes DataFrames, including filtering, merging and renaming
     """
     if countries:
         clientDF = clientDF.filter(
                 clientDF.country.isin(countries)
             ).select(
-                clientDF.id, clientDF.email
+                clientDF.id, clientDF.email, clientDF.country
             )
     else:
-        clientDF = clientDF.select(clientDF.id, clientDF.email)
+        clientDF = clientDF.select(
+                clientDF.id, clientDF.email, clientDF.country
+            )
 
     financialDF = financialDF.select(
             financialDF.id, financialDF.btc_a, financialDF.cc_t
         )
 
     df = clientDF.join(financialDF, ['id'])
+    df = df.select([col(c).alias(rename.get(c, c)) for c in df.columns])
     return df
 
 
-def main(client_csv: str, financial_csv: str, countries: list):
+def main(client_csv: str,
+         financial_csv: str,
+         countries: list,
+         rename: dict = {
+            'id': 'client_identifier',
+            'btc_a': 'bitcoin_address',
+            'cc_t': 'credit_card_type'
+            }):
     """
     main
     """
     spark = create_session()
     clientDF, financialDF = read_data(spark, client_csv, financial_csv)
-    df = process_data(clientDF, financialDF, countries)
+    df = process_data(clientDF, financialDF, countries, rename)
+
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
