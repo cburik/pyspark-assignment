@@ -1,8 +1,19 @@
 import argparse
 import logging
+from logging.handlers import RotatingFileHandler
 from pyspark.sql import SparkSession, DataFrame
 from pyspark.sql.functions import col
 from typing import Tuple
+
+
+def logging_setup(filepath: str):
+    """
+    Setup of python logging module
+    """
+    handler = RotatingFileHandler(filepath, maxBytes=20000, backupCount=10)
+    logging.basicConfig(format='%(asctime)s - %(levelname)s: %(message)s',
+                        level=logging.INFO,
+                        handlers=[handler])
 
 
 def create_session() -> SparkSession:
@@ -70,6 +81,7 @@ def output(df: DataFrame, outdir: str):
     """
     Outputs data to csv
     """
+    logging.info("Writing to directory: {}".format(outdir))
     df.write.format('csv').mode('overwrite').options(header=True).save(outdir)
 
 
@@ -81,19 +93,19 @@ def main(client_csv: str,
             'btc_a': 'bitcoin_address',
             'cc_t': 'credit_card_type'
             },
-         outdir: str = 'client_data/'):
+         outdir: str = 'client_data/',
+         logpath: str = 'logs/pyspark-assignment.log'):
     """
     main
     """
-    logging.basicConfig(format='%(asctime)s - %(levelname)s: %(message)s',
-                        filename='logs/pyspark-assignment.log',
-                        level=logging.INFO)
+    logging_setup(logpath)
     logging.critical('Starting')
 
     spark = create_session()
     clientDF, financialDF = read_data(spark, client_csv, financial_csv)
     df = process_data(clientDF, financialDF, countries, rename)
     output(df, outdir=outdir)
+    logging.info("Finished")
 
 
 if __name__ == '__main__':
