@@ -142,6 +142,10 @@ def output(df: DataFrame, outdir: str):
         A Spark DataFrame
     outdir: str
         The output directory
+    
+    Returns
+    -------
+    None
     """
     logging.info("Writing to directory: {}".format(outdir))
     df.write.format('csv').mode('overwrite').options(header=True).save(outdir)
@@ -188,6 +192,10 @@ def main(client_csv: str,
         Output directory, default: 'client_data/'
     logpath: str
         log file to write logs to, default: 'logs/pyspark-assignment.log'
+    
+    Returns
+    -------
+    None
     """
     logging_setup(logpath)
     logging.critical('Starting')
