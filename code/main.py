@@ -49,6 +49,13 @@ def process_data(clientDF: DataFrame,
     return df
 
 
+def output(df: DataFrame, folder: str):
+    """
+    Outputs data to csv
+    """
+    df.write.format('csv').mode('overwrite').options(header=True).save(folder)
+
+
 def main(client_csv: str,
          financial_csv: str,
          countries: list,
@@ -56,13 +63,15 @@ def main(client_csv: str,
             'id': 'client_identifier',
             'btc_a': 'bitcoin_address',
             'cc_t': 'credit_card_type'
-            }):
+            },
+         folder: str = 'client_data/'):
     """
     main
     """
     spark = create_session()
     clientDF, financialDF = read_data(spark, client_csv, financial_csv)
     df = process_data(clientDF, financialDF, countries, rename)
+    output(df, folder=folder)
 
 
 if __name__ == '__main__':
