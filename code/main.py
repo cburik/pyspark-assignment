@@ -1,5 +1,6 @@
 import argparse
 from pyspark.sql import SparkSession, DataFrame
+from pyspark.sql.functions import col
 from typing import Tuple
 
 
@@ -21,18 +22,54 @@ def read_data(spark: SparkSession,
     return clientDF, financialDF
 
 
-def main(client_csv, financial_csv):
+def process_data(clientDF: DataFrame,
+                 financialDF: DataFrame,
+                 countries: list,
+                 rename: dict) -> DataFrame:
+    """
+    Processes DataFrames, including filtering, merging and renaming
+    """
+    if countries:
+        clientDF = clientDF.filter(
+                clientDF.country.isin(countries)
+            ).select(
+                clientDF.id, clientDF.email, clientDF.country
+            )
+    else:
+        clientDF = clientDF.select(
+                clientDF.id, clientDF.email, clientDF.country
+            )
+
+    financialDF = financialDF.select(
+            financialDF.id, financialDF.btc_a, financialDF.cc_t
+        )
+
+    df = clientDF.join(financialDF, ['id'])
+    df = df.select([col(c).alias(rename.get(c, c)) for c in df.columns])
+    return df
+
+
+def main(client_csv: str,
+         financial_csv: str,
+         countries: list,
+         rename: dict = {
+            'id': 'client_identifier',
+            'btc_a': 'bitcoin_address',
+            'cc_t': 'credit_card_type'
+            }):
     """
     main
     """
     spark = create_session()
     clientDF, financialDF = read_data(spark, client_csv, financial_csv)
+    df = process_data(clientDF, financialDF, countries, rename)
 
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
     parser.add_argument('client_csv')
     parser.add_argument('financial_csv')
+    parser.add_argument('--countries', nargs='*', dest='countries', default=[])
     args = parser.parse_args()
-    
-    main(args.client_csv, args.financial_csv)
+
+    main(args.client_csv, args.financial_csv, args.countries)
