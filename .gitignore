@@ -2,3 +2,4 @@
 .history/
 trials/
 client_data/
+logs/*
