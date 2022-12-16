@@ -45,13 +45,13 @@ Alternatively, if you have installed this as a python module one can run the fol
 The function takes three arguments and three optional keyword arguments:
 
 * `client_csv: str` path to csv file with client data with expected columns:
-            * id: clientid number
-            * email: client emailadress
-            * country: client country
+    * id: clientid number
+    * email: client emailadress
+    * country: client country
 * `financial_csv: str` path to csv file with financial data with expected columns:
-            * id: clientid number
-            * btc_a: bitcoin address
-            * cc_t: credit card type
+    * id: clientid number
+    * btc_a: bitcoin address
+    * cc_t: credit card type
 * `countries: list` list of countries to filter on. If empty, country filter is skipped. 
 * `rename: dict` dictionary of columns to rename. Default: 
 
