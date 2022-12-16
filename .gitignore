@@ -1,5 +1,9 @@
 .vscode/
 .history/
+
 trials/
 client_data/
 logs/*
+
+*.egg-info
+*__pycache__
