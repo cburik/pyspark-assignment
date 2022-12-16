@@ -56,7 +56,7 @@ def read_data(spark: SparkSession,
     client_csv: str
         path to csv file with client data
     financial_csv: str
-        path to csv file with financial data 
+        path to csv file with financial data
 
     Returns
     -------
@@ -68,11 +68,18 @@ def read_data(spark: SparkSession,
 
     clientDF = spark.read.csv(client_csv, header=True)
     financialDF = spark.read.csv(financial_csv, header=True)
+    client_count = clientDF.count()
     logging.info(
         "Number of lines in client data: {}".format(clientDF.count())
         )
     logging.info(
         "Number of lines in financial data: {}".format(financialDF.count())
+        )
+    fin_count = financialDF.count()
+    if client_count != fin_count:
+        logging.warn(
+            'Unequal number of rows in DataFrames, client rows ({}) != '
+            'financial rows ({})'.format(client_count, fin_count)
         )
     return clientDF, financialDF
 
@@ -121,6 +128,9 @@ def process_data(clientDF: DataFrame,
                 clientDF.id, clientDF.email, clientDF.country
             )
 
+    client_count = clientDF.count()
+    logging.info('Number of lines after filtering: {}'.format(client_count))
+
     financialDF = financialDF.select(
             financialDF.id, financialDF.btc_a, financialDF.cc_t
         )
@@ -128,7 +138,15 @@ def process_data(clientDF: DataFrame,
     logging.info('Merging datasets...')
     df = clientDF.join(financialDF, ['id'])
     df = df.select([col(c).alias(rename.get(c, c)) for c in df.columns])
-    logging.info('Number of lines in final dataset: {}'.format(df.count()))
+
+    final_count = df.count()
+    logging.info('Number of lines in final dataset: {}'.format(final_count))
+
+    if client_count != final_count:
+        logging.warn(
+            'Number of lines in client data after filtering ({}), '
+            'not equal to final dataset ({})'.format(client_count, final_count)
+            )
     return df
 
 
@@ -142,7 +160,7 @@ def output(df: DataFrame, outdir: str):
         A Spark DataFrame
     outdir: str
         The output directory
-    
+
     Returns
     -------
     None
@@ -192,7 +210,7 @@ def main(client_csv: str,
         Output directory, default: 'client_data/'
     logpath: str
         log file to write logs to, default: 'logs/pyspark-assignment.log'
-    
+
     Returns
     -------
     None
