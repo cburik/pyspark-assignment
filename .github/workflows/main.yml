@@ -39,3 +39,7 @@ jobs:
       - name: deploy
         run: |
           python setup.py sdist --formats=zip
+      - uses: actions/upload-artifact@v3
+        with:
+          name: latest_build.zip
+          path: dist/pyspark_assignment-*.zip
