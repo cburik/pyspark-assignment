@@ -1,0 +1,10 @@
+name: pyspark-exercise
+channels:
+  - defaults
+  - conda-forge
+dependencies:
+  - python=3.7
+  - pyspark=3.2.1
+  - flake8
+  - pytest
+  - chispa
