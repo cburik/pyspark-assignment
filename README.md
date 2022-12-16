@@ -52,7 +52,7 @@ The function takes three arguments and three optional keyword arguments:
             * id: clientid number
             * btc_a: bitcoin address
             * cc_t: credit card type
-* `countries: list` list of countries to filter on. If empty, country filter is skipped. Default: empty list. 
+* `countries: list` list of countries to filter on. If empty, country filter is skipped. 
 * `rename: dict` dictionary of columns to rename. Default: 
 
       {
