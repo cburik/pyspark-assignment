@@ -2,7 +2,7 @@
 This code is for an Assignment in PySpark (see exercise.md for details)
 
 ## Description
-The code for this assignment can be found in code/pyspark_assignment.py. The program takes two datasets,
+The code for this assignment can be found in pyspark_assignment/pyspark_assignment.py. The program takes two datasets,
 filters them and merges them. The output is saved in csv format to the client_data/ directory. 
 
 ## Installation
@@ -46,7 +46,7 @@ The function takes three arguments and three optional keyword arguments:
 
 * `client_csv: str` path to csv file with client data with expected columns:
     * id: clientid number
-    * email: client emailadress
+    * email: client email adress
     * country: client country
 * `financial_csv: str` path to csv file with financial data with expected columns:
     * id: clientid number
