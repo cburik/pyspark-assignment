@@ -15,7 +15,7 @@ If you want to use it as a python module, clone this repository or download the 
 ### From Command Line
 The program can be ran from the command line using:
  
- `python pyspark_assignment/pyspark_assignment.py file1 file2 [--countries list] [--outdir directory]`
+ `python pyspark_assignment/pyspark_assignment.py file1 file2 [--countries list] [--outdir directory] [--logpath path]`
 
  The program takes two input files in csv format:
  * `file1` is expected to be the client data file with the necessary columns:
@@ -27,10 +27,10 @@ The program can be ran from the command line using:
     * `btc_a` bitcoin address
     * `cc_t` creditcard type (e.g. mastercard, visa)
 
-The program also has two optional arguments:
+The program also has three optional arguments:
 * `--countries list` where the `list` is a list of countries on which the data is filtered
-* `--outdir directory` where `directory` is the desired output directory.
-
+* `--outdir directory` where `directory` is the desired output directory, default is `client_data/`
+* `--logpath path` where `path` is the desired logging output file, default is `logs/pyspark-assignment.log`.
 ### As Python module
 Alternatively, if you have installed this as a python module one can run the following code.
 
