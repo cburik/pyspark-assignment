@@ -3,3 +3,4 @@
 trials/
 client_data/
 logs/*
+*.egg-info
