@@ -231,6 +231,10 @@ if __name__ == '__main__':
     parser.add_argument('financial_csv')
     parser.add_argument('--countries', nargs='*', dest='countries', default=[])
     parser.add_argument('--outdir', dest='outdir', default='client_data/')
+    parser.add_argument('--logpath', dest='outdir',
+                        default='logs/pyspark-assignment.log')
+
     args = parser.parse_args()
 
-    main(args.client_csv, args.financial_csv, args.countries)
+    main(args.client_csv, args.financial_csv, args.countries,
+         outdir=args.outdir, logpath=args.logpath)
