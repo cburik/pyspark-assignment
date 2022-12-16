@@ -77,7 +77,7 @@ def read_data(spark: SparkSession,
         )
     fin_count = financialDF.count()
     if client_count != fin_count:
-        logging.warn(
+        logging.warning(
             'Unequal number of rows in DataFrames, client rows ({}) != '
             'financial rows ({})'.format(client_count, fin_count)
         )
@@ -143,7 +143,7 @@ def process_data(clientDF: DataFrame,
     logging.info('Number of lines in final dataset: {}'.format(final_count))
 
     if client_count != final_count:
-        logging.warn(
+        logging.warning(
             'Number of lines in client data after filtering ({}), '
             'not equal to final dataset ({})'.format(client_count, final_count)
             )
